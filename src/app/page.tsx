@@ -42,6 +42,7 @@ function Icon({
 export default function Home() {
   // State for notes array
   const [notes, setNotes] = useState<Array<Note>>([]);
+  const [hasLoadedNotes, setHasLoadedNotes] = useState(false);
   // State for form inputs
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -64,12 +65,14 @@ export default function Home() {
     if (savedNotes) {
       setNotes(JSON.parse(savedNotes));
     }
+    setHasLoadedNotes(true);
   }, []);
 
   // Save notes to localStorage whenever notes change
   useEffect(() => {
+    if (!hasLoadedNotes) return;
     localStorage.setItem('notes', JSON.stringify(notes));
-  }, [notes]);
+  }, [hasLoadedNotes, notes]);
 
   // Check for duplicate notes (same title and description)
   useEffect(() => {
